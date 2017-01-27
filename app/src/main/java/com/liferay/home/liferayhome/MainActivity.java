@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity
 	GoogleAccountCredential credential;
 
 	static final int REQUEST_ACCOUNT_PICKER = 1000;
-	static final int REQUEST_AUTHORIZATION = 1001;
 
 	private static final String PREF_ACCOUNT_NAME = "accountName";
 	private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
@@ -88,26 +87,23 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-			case REQUEST_ACCOUNT_PICKER:
-				if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
-					String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-					if (accountName != null) {
-						SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
-						SharedPreferences.Editor editor = settings.edit();
-						editor.putString(PREF_ACCOUNT_NAME, accountName);
-						editor.apply();
-						credential.setSelectedAccountName(accountName);
-						requestsCalendarEvents();
-					}
-				}
-				break;
-			case REQUEST_AUTHORIZATION:
-				if (resultCode == RESULT_OK) {
+		if (requestCode == REQUEST_ACCOUNT_PICKER) {
+			if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
+				String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+				if (accountName != null) {
+					savePreference(accountName);
+					credential.setSelectedAccountName(accountName);
 					requestsCalendarEvents();
 				}
-				break;
+			}
 		}
+	}
+
+	private void savePreference(String accountName) {
+		SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(PREF_ACCOUNT_NAME, accountName);
+		editor.apply();
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
@@ -129,7 +125,7 @@ public class MainActivity extends AppCompatActivity
 
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putParcelable(LOCATION_KEY, lastLocation);
-		savedInstanceState.putString(LAST_UPDATED_TIME_STRING_KEY, lastUpdateTime.toString());
+		savedInstanceState.putLong(LAST_UPDATED_TIME_STRING_KEY, lastUpdateTime.getTime());
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -137,14 +133,8 @@ public class MainActivity extends AppCompatActivity
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 
-		if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
-			lastLocation = savedInstanceState.getParcelable(LOCATION_KEY);
-		}
-
-		// Update the value of mLastUpdateTime from the Bundle and update the UI.
-		if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
-			lastUpdateTime = new Date(savedInstanceState.getString(LAST_UPDATED_TIME_STRING_KEY));
-		}
+		lastLocation = savedInstanceState.getParcelable(LOCATION_KEY);
+		lastUpdateTime = new Date(savedInstanceState.getLong(LAST_UPDATED_TIME_STRING_KEY));
 	}
 
 	@Override
