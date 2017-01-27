@@ -10,10 +10,19 @@
 	tools:showIn="@layout/app_bar_home"
 	>
 
-	<TextView
+
+	<com.eralp.circleprogressview.CircleProgressView
+		android:id="@+id/circle_progress_view"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="HERE GOES THE CURRENT TEMPERATURE"
+		android:layout_height="match_parent"
+		android:layout_centerInParent="true"
+		android:layout_margin="50dp"
+		app:cpv_background_circle_color="@android:color/holo_blue_dark"
+		app:cpv_background_circle_width="2dp"
+		app:cpv_circle_color="@android:color/holo_red_dark"
+		app:cpv_circle_width="6dp"
+		app:cpv_text_color="#27375c"
+		app:cpv_text_size="40"
 		/>
 
 

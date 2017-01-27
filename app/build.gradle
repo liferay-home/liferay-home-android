@@ -25,8 +25,6 @@ dependencies {
 		exclude group: 'com.android.support', module: 'support-annotations'
 	})
 
-
-
 	compile('com.google.api-client:google-api-client-android:+') {
 		exclude group: 'org.apache.httpcomponents'
 	}
@@ -42,5 +40,6 @@ dependencies {
 	compile 'com.google.code.findbugs:jsr305:2.0.1'
 	compile 'org.greenrobot:eventbus:3.0.0'
 	compile 'com.android.support:design:25.1.0'
+	compile 'com.github.eralpyucel:CircleProgressView:v1.0'
 	testCompile 'junit:junit:4.12'
 }
