@@ -93,7 +93,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 		if (id == R.id.set_your_home) {
 			startActivity(new Intent(this, MapsActivity.class));
 		} else if (id == R.id.home) {
-			startActivity(new Intent(this, HomeActivity.class));
+			Intent intent = new Intent(this, HomeActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			startActivity(intent);
+			overridePendingTransition(0, 0);
 		}
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

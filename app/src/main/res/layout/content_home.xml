@@ -22,6 +22,7 @@
 		app:cpv_circle_color="@android:color/holo_red_dark"
 		app:cpv_circle_width="6dp"
 		app:cpv_text_color="#27375c"
+		app:cpv_text_prefix=""
 		app:cpv_text_size="40"
 		/>
 
