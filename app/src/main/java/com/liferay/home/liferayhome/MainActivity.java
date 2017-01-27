@@ -1,7 +1,6 @@
 package com.liferay.home.liferayhome;
 
 import android.accounts.AccountManager;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -70,72 +68,33 @@ public class MainActivity extends AppCompatActivity
 
 		credential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES))
 			.setBackOff(new ExponentialBackOff());
-		getResultsFromApi();
-
+		requestsCalendarEvents();
 	}
 
-	/**
-	 * Attempt to call the API, after verifying that all the preconditions are
-	 * satisfied. The preconditions are: Google Play Services installed, an
-	 * account was selected and the device currently has online access. If any
-	 * of the preconditions are not satisfied, the app will prompt the user as
-	 * appropriate.
-	 */
-	private void getResultsFromApi() {
-		if (!isGooglePlayServicesAvailable()) {
-			acquireGooglePlayServices();
-		} else if (credential.getSelectedAccountName() == null) {
+	private void requestsCalendarEvents() {
+
+		//FIXME check status of google play services
+		if (credential.getSelectedAccountName() == null) {
 			chooseAccount();
 		} else {
 			new Thread(new CalendarRequest()).start();
 		}
 	}
 
-	private boolean isGooglePlayServicesAvailable() {
-		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-		final int connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(this);
-		return connectionStatusCode == ConnectionResult.SUCCESS;
-	}
-
-	/**
-	 * Attempts to set the account used with the API credentials. If an account
-	 * name was previously saved it will use that one; otherwise an account
-	 * picker dialog will be shown to the user. Note that the setting the
-	 * account to use with the credentials object requires the app to have the
-	 * GET_ACCOUNTS permission, which is requested here if it is not already
-	 * present. The AfterPermissionGranted annotation indicates that this
-	 * function will be rerun automatically whenever the GET_ACCOUNTS permission
-	 * is granted.
-	 */
 	private void chooseAccount() {
 		String accountName = getPreferences(Context.MODE_PRIVATE).getString(PREF_ACCOUNT_NAME, null);
 		if (accountName != null) {
 			credential.setSelectedAccountName(accountName);
-			getResultsFromApi();
+			requestsCalendarEvents();
 		} else {
-			// Start a dialog from which the user can choose an account
 			startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
 		}
 	}
 
-	/**
-	 * Called when an activity launched here (specifically, AccountPicker
-	 * and authorization) exits, giving you the requestCode you started it with,
-	 * the resultCode it returned, and any additional data from it.
-	 *
-	 * @param requestCode code indicating which activity result is incoming.
-	 * @param resultCode code indicating the result of the incoming
-	 * activity result.
-	 * @param data Intent (containing result data) returned by incoming
-	 * activity result.
-	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
-			case REQUEST_GOOGLE_PLAY_SERVICES:
-				getResultsFromApi();
-				break;
 			case REQUEST_ACCOUNT_PICKER:
 				if (resultCode == RESULT_OK && data != null && data.getExtras() != null) {
 					String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
@@ -145,42 +104,16 @@ public class MainActivity extends AppCompatActivity
 						editor.putString(PREF_ACCOUNT_NAME, accountName);
 						editor.apply();
 						credential.setSelectedAccountName(accountName);
-						getResultsFromApi();
+						requestsCalendarEvents();
 					}
 				}
 				break;
 			case REQUEST_AUTHORIZATION:
 				if (resultCode == RESULT_OK) {
-					getResultsFromApi();
+					requestsCalendarEvents();
 				}
 				break;
 		}
-	}
-
-	/**
-	 * Attempt to resolve a missing, out-of-date, invalid or disabled Google
-	 * Play Services installation via a user dialog, if possible.
-	 */
-	private void acquireGooglePlayServices() {
-		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-		final int connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(this);
-		if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
-			showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
-		}
-	}
-
-	/**
-	 * Display an error dialog showing that Google Play Services is missing
-	 * or out of date.
-	 *
-	 * @param connectionStatusCode code describing the presence (or lack of)
-	 * Google Play Services on this device.
-	 */
-	void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
-		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-		Dialog dialog =
-			apiAvailability.getErrorDialog(MainActivity.this, connectionStatusCode, REQUEST_GOOGLE_PLAY_SERVICES);
-		dialog.show();
 	}
 
 	private class CalendarRequest implements Runnable {
