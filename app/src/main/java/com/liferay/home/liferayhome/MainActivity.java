@@ -10,26 +10,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.DateTime;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
-import java.io.IOException;
-import java.util.ArrayList;
+import com.liferay.home.liferayhome.interactors.CalendarRequest;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -43,13 +36,10 @@ public class MainActivity extends AppCompatActivity
 	private Location lastLocation;
 	private Date lastUpdateTime;
 
-	//889713454476-3jm4iblm7sneq0n5fm5krn71dflin8dn.apps.googleusercontent.com
-
 	GoogleAccountCredential credential;
 
 	static final int REQUEST_ACCOUNT_PICKER = 1000;
 	static final int REQUEST_AUTHORIZATION = 1001;
-	static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
 
 	private static final String PREF_ACCOUNT_NAME = "accountName";
 	private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
@@ -66,18 +56,22 @@ public class MainActivity extends AppCompatActivity
 				.build();
 		}
 
+		getEventsFromCalendarAPI();
+	}
+
+	private void getEventsFromCalendarAPI() {
 		credential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES))
 			.setBackOff(new ExponentialBackOff());
 		requestsCalendarEvents();
 	}
 
 	private void requestsCalendarEvents() {
-
 		//FIXME check status of google play services
 		if (credential.getSelectedAccountName() == null) {
 			chooseAccount();
 		} else {
-			new Thread(new CalendarRequest()).start();
+			CalendarRequest calendarRequest = new CalendarRequest(credential);
+			new Thread(calendarRequest).start();
 		}
 	}
 
@@ -116,52 +110,9 @@ public class MainActivity extends AppCompatActivity
 		}
 	}
 
-	private class CalendarRequest implements Runnable {
-
-		@Override
-		public void run() {
-			try {
-				HttpTransport transport = AndroidHttp.newCompatibleTransport();
-				JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-				com.google.api.services.calendar.Calendar mService =
-					new com.google.api.services.calendar.Calendar.Builder(transport, jsonFactory,
-						credential).setApplicationName("Google Calendar API Android Quickstart").build();
-
-				DateTime now = new DateTime(System.currentTimeMillis());
-				List<String> eventStrings = new ArrayList<>();
-
-				Events events = mService.events()
-					.list("primary")
-					.setMaxResults(10)
-					.setTimeMin(now)
-					.setOrderBy("startTime")
-					.setSingleEvents(true)
-					.execute();
-
-				List<Event> items = events.getItems();
-
-				for (Event event : items) {
-					DateTime start = event.getStart().getDateTime();
-					if (start == null) {
-						// All-day events don't have start times, so just use
-						// the start date.
-						start = event.getStart().getDate();
-					}
-					eventStrings.add(String.format("%s (%s)", event.getSummary(), start));
-				}
-				EventBus.getDefault().post(eventStrings);
-			} catch (IOException e) {
-				//FIXME !
-				e.printStackTrace();
-			}
-		}
-	}
-
 	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onMessageEvent(List<String> events) {
-		for (String event : events) {
-			Log.e("LiferayHome", event);
-		}
+	public void onMessageEvent(Events events) {
+		Log.e("LiferayHome", events.getSummary());
 	}
 
 	protected void onStart() {
@@ -207,17 +158,17 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	private void showLocation() {
-		//if (lastLocation != null) {
-		//	Log.e("LiferayHome", lastLocation.toString());
-		//	TextView lastUpdateTime = (TextView) findViewById(R.id.last_update_time);
-		//	lastUpdateTime.setText(new Date().toString());
-		//
-		//	TextView latitude = (TextView) findViewById(R.id.latitude);
-		//	latitude.setText(String.valueOf(lastLocation.getLatitude()));
-		//
-		//	TextView longitude = (TextView) findViewById(R.id.longitude);
-		//	longitude.setText(String.valueOf(lastLocation.getLongitude()));
-		//}
+		if (lastLocation != null) {
+			Log.e("LiferayHome", lastLocation.toString());
+			TextView lastUpdateTime = (TextView) findViewById(R.id.last_update_time);
+			lastUpdateTime.setText(new Date().toString());
+
+			TextView latitude = (TextView) findViewById(R.id.latitude);
+			latitude.setText(String.valueOf(lastLocation.getLatitude()));
+
+			TextView longitude = (TextView) findViewById(R.id.longitude);
+			longitude.setText(String.valueOf(lastLocation.getLongitude()));
+		}
 	}
 
 	@Override
@@ -234,7 +185,7 @@ public class MainActivity extends AppCompatActivity
 	public void onLocationChanged(Location location) {
 		lastLocation = location;
 		lastUpdateTime = new Date();
-		//showLocation();
+		showLocation();
 	}
 
 	private void requestLocationUpdates() {
