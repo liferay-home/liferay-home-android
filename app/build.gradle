@@ -29,5 +29,17 @@ dependencies {
 
 	compile 'com.google.android.gms:play-services-maps:10.0.1'
 	compile 'com.google.android.gms:play-services-location:10.0.1'
+	compile 'com.google.android.gms:play-services-auth:10.0.1'
+
+	compile 'com.google.code.findbugs:jsr305:2.0.1'
+
+	compile('com.google.api-client:google-api-client-android:+') {
+		exclude group: 'org.apache.httpcomponents'
+	}
+	compile('com.google.apis:google-api-services-calendar:+') {
+		exclude group: 'org.apache.httpcomponents'
+	}
+
+	compile 'org.greenrobot:eventbus:3.0.0'
 	testCompile 'junit:junit:4.12'
 }
