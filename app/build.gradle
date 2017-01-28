@@ -41,5 +41,9 @@ dependencies {
 	compile 'org.greenrobot:eventbus:3.0.0'
 	compile 'com.android.support:design:25.1.0'
 	compile 'com.github.eralpyucel:CircleProgressView:v1.0'
+	compile 'me.angrybyte.slider:slider:1.3.0'
+	compile 'com.github.Triggertrap:SeekArc:+'
+	compile 'com.squareup.okhttp3:okhttp:3.5.0'
+	compile 'com.google.code.gson:gson:+'
 	testCompile 'junit:junit:4.12'
 }

@@ -11,27 +11,28 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import com.eralp.circleprogressview.CircleProgressView;
+import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.triggertrap.seekarc.SeekArc;
 import java.util.Date;
-import org.greenrobot.eventbus.EventBus;
 
 public class HomeActivity extends AppCompatActivity
 	implements NavigationView.OnNavigationItemSelectedListener, LocationListener, GoogleApiClient.ConnectionCallbacks,
-	GoogleApiClient.OnConnectionFailedListener {
+	GoogleApiClient.OnConnectionFailedListener, SeekArc.OnSeekArcChangeListener {
 
 	private static final String LOCATION_KEY = "LOCATION_KEY";
 	private static final String LAST_UPDATED_TIME_STRING_KEY = "LAST_UPDATED_TIME_STRING_KEY";
 	private GoogleApiClient googleApiClient;
 	private Location lastLocation;
 	private Date lastUpdateTime;
+	private Double progress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +50,6 @@ public class HomeActivity extends AppCompatActivity
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
 
-		setCircleProgressView(60);
-
 		if (googleApiClient == null) {
 			googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this)
@@ -59,13 +58,30 @@ public class HomeActivity extends AppCompatActivity
 		}
 	}
 
-	private void setCircleProgressView(int progress) {
-		CircleProgressView circleProgressView = (CircleProgressView) findViewById(R.id.circle_progress_view);
-		circleProgressView.setTextEnabled(true);
-		circleProgressView.setInterpolator(new AccelerateDecelerateInterpolator());
-		circleProgressView.setStartAngle(45);
-		circleProgressView.setProgressWithAnimation(85, 2000);
-		circleProgressView.setProgress(progress);
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		progress = 60D;
+		refreshTemperature(progress);
+
+		SeekArc seekArc = (SeekArc) findViewById(R.id.seekArc);
+		seekArc.setArcColor(getResources().getColor(R.color.colorPrimary));
+		seekArc.setArcWidth(30);
+		seekArc.setProgressColor(getResources().getColor(R.color.colorPrimaryDark));
+		seekArc.setOnSeekArcChangeListener(this);
+		seekArc.setProgress(progress.intValue());
+		seekArc.setProgressWidth(30);
+	}
+
+	private void refreshTemperature(Double value) {
+		boolean celsius = PreferencesUtil.getPreference(this, SettingsActivity.CELSIUS);
+		if (!celsius) {
+			value = value * 1.8 + 32;
+		}
+
+		TextView temperature = (TextView) findViewById(R.id.temperature1);
+		temperature.setText(String.valueOf(value.intValue()));
 	}
 
 	protected void onStart() {
@@ -92,7 +108,7 @@ public class HomeActivity extends AppCompatActivity
 		lastUpdateTime = new Date(savedInstanceState.getLong(LAST_UPDATED_TIME_STRING_KEY));
 	}
 
-	//@Override
+	@Override
 	public void onConnected(@Nullable Bundle bundle) {
 		lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 		requestLocationUpdates();
@@ -151,9 +167,9 @@ public class HomeActivity extends AppCompatActivity
 		int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			return true;
-		}
+		//if (id == R.id.action_settings) {
+		//	return true;
+		//}
 
 		return super.onOptionsItemSelected(item);
 	}
@@ -171,10 +187,30 @@ public class HomeActivity extends AppCompatActivity
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivity(intent);
 			overridePendingTransition(0, 0);
+		} else {
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
 		}
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
+	}
+
+	@Override
+	public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
+		Log.d(MainActivity.TAG, String.valueOf(i));
+		progress = (double) i;
+		refreshTemperature(progress);
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekArc seekArc) {
+
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekArc seekArc) {
+
 	}
 }

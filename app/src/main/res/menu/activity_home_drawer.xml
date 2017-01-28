@@ -10,6 +10,10 @@
 			android:id="@+id/set_your_home"
 			android:icon="@drawable/ic_add_location_black_24dp"
 			android:title="Set your Home"/>
+		<item
+			android:id="@+id/settings"
+			android:icon="@drawable/ic_menu_manage"
+			android:title="Configure your Pi"/>
 	</group>
 
 	<!--<item android:title="">
