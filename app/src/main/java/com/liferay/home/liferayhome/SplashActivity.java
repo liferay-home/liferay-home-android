@@ -13,7 +13,7 @@ public class SplashActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
 
-		String accountName = getPreferences(Context.MODE_PRIVATE).getString(PreferencesUtil.PREF_ACCOUNT_NAME, null);
+		String accountName = PreferencesUtil.getStrPreference(this, PreferencesUtil.PREF_ACCOUNT_NAME);
 		final Class clasz = accountName == null ? ConfigureAccount.class : HomeActivity.class;
 		new Handler().postDelayed(new Runnable() {
 			@Override

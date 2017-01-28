@@ -4,9 +4,12 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import static com.liferay.home.liferayhome.PreferencesUtil.PREF_ACCOUNT_NAME;
 import static com.liferay.home.liferayhome.PreferencesUtil.REQUEST_ACCOUNT_PICKER;
@@ -69,5 +72,9 @@ public class SettingsActivity extends LiferayHomeActivity implements View.OnClic
 		celsius.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
 		fahrenheit.setTextColor(getResources().getColor(R.color.colorAccent));
 		savePreference(this, CELSIUS, true);
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onMessageEvent(String success) {
 	}
 }

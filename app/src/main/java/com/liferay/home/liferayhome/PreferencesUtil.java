@@ -2,12 +2,17 @@ package com.liferay.home.liferayhome;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 
 public class PreferencesUtil {
 
 	public static final String LIFERAY_HOME = "LIFERAY_HOME";
 	public static final String PREF_ACCOUNT_NAME = "accountName";
 	public static final int REQUEST_ACCOUNT_PICKER = 1000;
+
+	public static String getDeviceId(Context context) {
+		return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+	}
 
 	public static void savePreference(Context context, String name, String value) {
 		SharedPreferences.Editor editor = getEditor(context);
@@ -29,5 +34,10 @@ public class PreferencesUtil {
 	public static boolean getPreference(Context context, String name) {
 		SharedPreferences preferences = context.getSharedPreferences(LIFERAY_HOME, Context.MODE_PRIVATE);
 		return preferences.getBoolean(name, false);
+	}
+
+	public static String getStrPreference(Context context, String name) {
+		SharedPreferences preferences = context.getSharedPreferences(LIFERAY_HOME, Context.MODE_PRIVATE);
+		return preferences.getString(name, null);
 	}
 }

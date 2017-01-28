@@ -9,7 +9,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -20,15 +19,27 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.triggertrap.seekarc.SeekArc;
 import java.util.Date;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-public class HomeActivity extends AppCompatActivity
+public class HomeActivity extends LiferayHomeActivity
 	implements NavigationView.OnNavigationItemSelectedListener, LocationListener, GoogleApiClient.ConnectionCallbacks,
 	GoogleApiClient.OnConnectionFailedListener, SeekArc.OnSeekArcChangeListener {
 
 	private static final String LOCATION_KEY = "LOCATION_KEY";
 	private static final String LAST_UPDATED_TIME_STRING_KEY = "LAST_UPDATED_TIME_STRING_KEY";
+	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 	private GoogleApiClient googleApiClient;
 	private Location lastLocation;
 	private Date lastUpdateTime;
@@ -62,16 +73,27 @@ public class HomeActivity extends AppCompatActivity
 	protected void onResume() {
 		super.onResume();
 
-		progress = 60D;
-		refreshTemperature(progress);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
 
-		SeekArc seekArc = (SeekArc) findViewById(R.id.seekArc);
-		seekArc.setArcColor(getResources().getColor(R.color.colorPrimary));
-		seekArc.setArcWidth(30);
-		seekArc.setProgressColor(getResources().getColor(R.color.colorPrimaryDark));
-		seekArc.setOnSeekArcChangeListener(this);
-		seekArc.setProgress(progress.intValue());
-		seekArc.setProgressWidth(30);
+				OkHttpClient client = new OkHttpClient();
+				try {
+					Request request = new Request.Builder().url(BASE_URL + "/sensor-data").get().build();
+					Response response = client.newCall(request).execute();
+					String result = response.body().string();
+
+					JsonElement jelement = new JsonParser().parse(result);
+					SensorsData sensors =
+						new Gson().fromJson(jelement.getAsJsonObject().get("_embedded"), SensorsData.class);
+					Log.d(MainActivity.TAG, result);
+
+					EventBus.getDefault().post(sensors);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 	private void refreshTemperature(Double value) {
@@ -92,6 +114,26 @@ public class HomeActivity extends AppCompatActivity
 	protected void onStop() {
 		googleApiClient.disconnect();
 		super.onStop();
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onMessageEvent(SensorsData sensorDatas) {
+
+		progress = 60D;
+		refreshTemperature(progress);
+
+		SeekArc seekArc = (SeekArc) findViewById(R.id.seekArc);
+		seekArc.setArcColor(getResources().getColor(R.color.colorPrimary));
+		seekArc.setArcWidth(30);
+		seekArc.setProgressColor(getResources().getColor(R.color.colorPrimaryDark));
+		seekArc.setOnSeekArcChangeListener(this);
+		seekArc.setProgress(progress.intValue());
+		seekArc.setProgressWidth(30);
+	}
+
+	@Override
+	protected void doSomethingWithAnAccount() {
+
 	}
 
 	public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -124,10 +166,43 @@ public class HomeActivity extends AppCompatActivity
 
 	}
 
+	public static final String BASE_URL = "http://app.liferay-home.wedeploy.io";
+
 	@Override
-	public void onLocationChanged(Location location) {
-		lastLocation = location;
-		lastUpdateTime = new Date();
+	public void onLocationChanged(final Location location) {
+
+		if (location.getLatitude() != lastLocation.getLatitude()
+			|| location.getLongitude() != lastLocation.getLongitude()) {
+
+			lastLocation = location;
+			lastUpdateTime = new Date();
+
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+
+					OkHttpClient client = new OkHttpClient();
+
+					Gson gson = new Gson();
+					try {
+						String deviceId = PreferencesUtil.getDeviceId(HomeActivity.this);
+						RequestBody phoneLocation =
+							RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(
+								new PhoneLocation(null, location.getLongitude(), location.getLatitude(), deviceId)));
+
+						Request request =
+							new Request.Builder().url(BASE_URL + "/locations").post(phoneLocation).build();
+						Response response = client.newCall(request).execute();
+						String result = response.body().string();
+						Log.d(MainActivity.TAG, result);
+
+						EventBus.getDefault().post("Success!");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		}
 	}
 
 	private void requestLocationUpdates() {
