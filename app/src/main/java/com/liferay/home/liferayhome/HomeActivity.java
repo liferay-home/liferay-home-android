@@ -137,8 +137,12 @@ public class HomeActivity extends LiferayHomeActivity
 	}
 
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putParcelable(LOCATION_KEY, lastLocation);
-		savedInstanceState.putLong(LAST_UPDATED_TIME_STRING_KEY, lastUpdateTime.getTime());
+		if (lastLocation != null) {
+			savedInstanceState.putParcelable(LOCATION_KEY, lastLocation);
+		}
+		if (lastUpdateTime != null) {
+			savedInstanceState.putLong(LAST_UPDATED_TIME_STRING_KEY, lastUpdateTime.getTime());
+		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -188,7 +192,7 @@ public class HomeActivity extends LiferayHomeActivity
 						String deviceId = PreferencesUtil.getDeviceId(HomeActivity.this);
 						RequestBody phoneLocation =
 							RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(
-								new PhoneLocation(null, location.getLongitude(), location.getLatitude(), deviceId)));
+								new PhoneLocation(null, location.getLongitude(), location.getLatitude(), null)));
 
 						Request request =
 							new Request.Builder().url(BASE_URL + "/locations").post(phoneLocation).build();
