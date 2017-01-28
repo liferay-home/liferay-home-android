@@ -20,6 +20,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.triggertrap.seekarc.SeekArc;
@@ -61,6 +62,15 @@ public class HomeActivity extends LiferayHomeActivity
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
 
+		TextView piNameField = (TextView) findViewById(R.id.pi_name);
+
+		TextView textView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.my_pi_name);
+		String piNameValue = PreferencesUtil.getStrPreference(this, "piname");
+		if (piNameValue != null) {
+			textView.setText(piNameValue);
+			piNameField.setText(piNameValue);
+		}
+
 		if (googleApiClient == null) {
 			googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this)
@@ -83,12 +93,19 @@ public class HomeActivity extends LiferayHomeActivity
 					Response response = client.newCall(request).execute();
 					String result = response.body().string();
 
-					JsonElement jelement = new JsonParser().parse(result);
-					SensorsData sensors =
-						new Gson().fromJson(jelement.getAsJsonObject().get("_embedded"), SensorsData.class);
-					Log.d(MainActivity.TAG, result);
+					JsonElement jsonElement = new JsonParser().parse(result);
+					JsonArray jsonArray = jsonElement.getAsJsonObject()
+						.get("_embedded")
+						.getAsJsonObject()
+						.get("sensorDatas")
+						.getAsJsonArray();
 
-					EventBus.getDefault().post(sensors);
+					for (int i = jsonArray.size() - 1; i > 0; i--) {
+						if (jsonArray.get(i).getAsJsonObject().get("type").getAsString().equals("TEMPERATURE")) {
+							EventBus.getDefault().post(jsonArray.get(i).getAsJsonObject().get("value").getAsDouble());
+							break;
+						}
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -103,7 +120,7 @@ public class HomeActivity extends LiferayHomeActivity
 		}
 
 		TextView temperature = (TextView) findViewById(R.id.temperature1);
-		temperature.setText(String.valueOf(value.intValue()));
+		temperature.setText(String.valueOf(((int) (value* 100.0)/100.0)) + "º");
 	}
 
 	protected void onStart() {
@@ -117,15 +134,15 @@ public class HomeActivity extends LiferayHomeActivity
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onMessageEvent(SensorsData sensorDatas) {
+	public void onMessageEvent(Double sensorDatas) {
 
-		progress = 60D;
+		progress = sensorDatas;
 		refreshTemperature(progress);
 
 		SeekArc seekArc = (SeekArc) findViewById(R.id.seekArc);
-		seekArc.setArcColor(getResources().getColor(R.color.colorPrimary));
+		seekArc.setArcColor(getResources().getColor(R.color.colorAccent));
 		seekArc.setArcWidth(30);
-		seekArc.setProgressColor(getResources().getColor(R.color.colorPrimaryDark));
+		seekArc.setProgressColor(getResources().getColor(R.color.colorPrimary));
 		seekArc.setOnSeekArcChangeListener(this);
 		seekArc.setProgress(progress.intValue());
 		seekArc.setProgressWidth(30);
@@ -175,8 +192,8 @@ public class HomeActivity extends LiferayHomeActivity
 	@Override
 	public void onLocationChanged(final Location location) {
 
-		if (location.getLatitude() != lastLocation.getLatitude()
-			|| location.getLongitude() != lastLocation.getLongitude()) {
+		if (location != null && lastLocation != null && (location.getLatitude() != lastLocation.getLatitude()
+			|| location.getLongitude() != lastLocation.getLongitude())) {
 
 			lastLocation = location;
 			lastUpdateTime = new Date();
@@ -278,9 +295,11 @@ public class HomeActivity extends LiferayHomeActivity
 
 	@Override
 	public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
-		Log.d(MainActivity.TAG, String.valueOf(i));
-		progress = (double) i;
-		refreshTemperature(progress);
+		if (b) {
+			Log.d(MainActivity.TAG, String.valueOf(i));
+			progress = (double) i;
+			refreshTemperature(progress);
+		}
 	}
 
 	@Override

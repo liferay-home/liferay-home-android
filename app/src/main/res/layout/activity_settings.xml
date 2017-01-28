@@ -19,14 +19,15 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="Connect Phone"
+			android:text="Unregister Phone"
 			/>
 
 		<Button
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="Connect Pi"
+			android:id="@+id/calendar"
+			android:text="Connect Calendar"
 			/>
 
 	</LinearLayout>
@@ -37,7 +38,7 @@
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/settings_buttons"
 		android:paddingTop="50dp"
-		android:text="Pi Location"
+		android:text="Home Pi"
 		/>
 
 	<EditText
@@ -46,7 +47,7 @@
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/pi_location"
 		android:paddingTop="50dp"
-		android:text="Pi Name"
+		android:text="My Pi Name"
 		/>
 
 	<TextView

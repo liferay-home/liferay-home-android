@@ -54,7 +54,7 @@ public class MapsActivity extends FragmentActivity
 
 	private void createGeofence() {
 		List<Geofence> geofences = new ArrayList<>();
-		geofences.add(new Geofence.Builder().setRequestId("0")
+		geofences.add(new Geofence.Builder().setRequestId("Looking for Home")
 			.setCircularRegion(33.98436373, -117.39578247, 100000)
 			.setExpirationDuration(Geofence.NEVER_EXPIRE)
 			.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
@@ -110,7 +110,7 @@ public class MapsActivity extends FragmentActivity
 
 		LatLng latLng =
 			position == null ? new LatLng(33.88, -117) : new LatLng(position.getLatitude(), position.getLongitude());
-		MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Home").draggable(true);
+		MarkerOptions markerOptions = new MarkerOptions().position(latLng).zIndex(1).title("Home").draggable(true);
 		googleMap.addMarker(markerOptions);
 		googleMap.setOnMarkerDragListener(this);
 		googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));

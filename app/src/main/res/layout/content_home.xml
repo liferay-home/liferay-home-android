@@ -94,22 +94,22 @@
 			android:layout_below="@+id/pi_name"
 			android:layout_centerHorizontal="true"
 			android:layout_marginTop="100dp"
-			android:textColor="@color/colorAccent"
-			android:textSize="80sp"
+			android:textColor="@color/colorPrimary"
+			android:textSize="60sp"
 			android:textStyle="bold"
 			/>
 
-		<TextView
-			android:id="@+id/temperature_scale1"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignBaseline="@+id/temperature1"
-			android:layout_below="@+id/pi_name"
-			android:layout_toRightOf="@+id/temperature1"
-			android:text="º"
-			android:textColor="@color/colorAccent"
-			android:textSize="80sp"
-			/>
+		<!--<TextView-->
+			<!--android:id="@+id/temperature_scale1"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:layout_alignBaseline="@+id/temperature1"-->
+			<!--android:layout_below="@+id/pi_name"-->
+			<!--android:layout_toRightOf="@+id/temperature1"-->
+			<!--android:text="º"-->
+			<!--android:textColor="@color/colorAccent"-->
+			<!--android:textSize="80sp"-->
+			<!--/>-->
 
 	</RelativeLayout>
 
