@@ -15,7 +15,7 @@
 		android:layout_centerHorizontal="true"
 		android:contentDescription="@string/liferay_home_logo"
 		android:paddingBottom="20dp"
-		android:src="@drawable/ic_home_2"
+		android:src="@drawable/home_icon"
 		android:tint="@color/colorPrimaryDark"
 		/>
 

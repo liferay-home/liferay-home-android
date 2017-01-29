@@ -21,7 +21,7 @@
 		android:contentDescription="@string/liferay_home_logo"
 		android:paddingTop="@dimen/nav_header_vertical_spacing"
 		android:tint="@color/colorAccent"
-		app:srcCompat="@drawable/ic_home_2"
+		app:srcCompat="@drawable/home_icon"
 		/>
 
 	<TextView

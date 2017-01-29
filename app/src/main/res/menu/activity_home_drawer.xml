@@ -4,11 +4,11 @@
 	<group android:checkableBehavior="single">
 		<item
 			android:id="@+id/home"
-			android:icon="@drawable/ic_home_black_24dp"
+			android:icon="@drawable/home_icon_24"
 			android:title="@string/home"/>
 		<item
 			android:id="@+id/set_your_home"
-			android:icon="@drawable/ic_add_location_black_24dp"
+			android:icon="@drawable/location_icon_24"
 			android:title="@string/set_your_home"/>
 		<item
 			android:id="@+id/settings"
