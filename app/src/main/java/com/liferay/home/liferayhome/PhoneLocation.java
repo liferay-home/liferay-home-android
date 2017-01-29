@@ -18,11 +18,9 @@ public class PhoneLocation {
 		return longitude;
 	}
 
-	public PhoneLocation(Integer id, Double longitude, Double latitude, String device) {
-		this.id = id;
+	public PhoneLocation(Double longitude, Double latitude) {
 		this.longitude = longitude;
 		this.latitude = latitude;
-		this.device = device;
 	}
 
 	public void setLongitude(Double longitude) {

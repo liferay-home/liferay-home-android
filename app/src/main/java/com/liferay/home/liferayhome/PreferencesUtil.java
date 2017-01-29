@@ -6,8 +6,9 @@ import android.provider.Settings;
 
 public class PreferencesUtil {
 
-	public static final String LIFERAY_HOME = "LIFERAY_HOME";
-	public static final String PREF_ACCOUNT_NAME = "accountName";
+	public static final String LIFERAY_HOME_DB = "LIFERAY_HOME_DB";
+	public static final String PREF_ACCOUNT_NAME = "PREF_ACCOUNT_NAME";
+	public static final String PREF_DEVICE_NAME = "PREF_DEVICE_NAME";
 	public static final int REQUEST_ACCOUNT_PICKER = 1000;
 
 	public static String getDeviceId(Context context) {
@@ -15,29 +16,26 @@ public class PreferencesUtil {
 	}
 
 	public static void savePreference(Context context, String name, String value) {
-		SharedPreferences.Editor editor = getEditor(context);
+		SharedPreferences.Editor editor = getPreferences(context).edit();
 		editor.putString(name, value);
 		editor.apply();
 	}
 
 	public static void savePreference(Context context, String name, boolean value) {
-		SharedPreferences.Editor editor = getEditor(context);
+		SharedPreferences.Editor editor = getPreferences(context).edit();
 		editor.putBoolean(name, value);
 		editor.apply();
 	}
 
-	private static SharedPreferences.Editor getEditor(Context context) {
-		SharedPreferences settings = context.getSharedPreferences(LIFERAY_HOME, Context.MODE_PRIVATE);
-		return settings.edit();
-	}
-
 	public static boolean getPreference(Context context, String name) {
-		SharedPreferences preferences = context.getSharedPreferences(LIFERAY_HOME, Context.MODE_PRIVATE);
-		return preferences.getBoolean(name, false);
+		return getPreferences(context).getBoolean(name, false);
 	}
 
 	public static String getStrPreference(Context context, String name) {
-		SharedPreferences preferences = context.getSharedPreferences(LIFERAY_HOME, Context.MODE_PRIVATE);
-		return preferences.getString(name, null);
+		return getPreferences(context).getString(name, null);
+	}
+
+	private static SharedPreferences getPreferences(Context context) {
+		return context.getSharedPreferences(LIFERAY_HOME_DB, Context.MODE_PRIVATE);
 	}
 }

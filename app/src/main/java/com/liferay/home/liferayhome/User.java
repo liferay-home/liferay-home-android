@@ -16,8 +16,7 @@ public class User {
 		return name;
 	}
 
-	public User(Integer id, String name, String googleId) {
-		this.id = id;
+	public User(String name, String googleId) {
 		this.name = name;
 		this.googleId = googleId;
 	}

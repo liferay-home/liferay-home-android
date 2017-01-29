@@ -32,15 +32,15 @@ public class GeofenceTransitionsIntentService extends IntentService {
 		if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER
 			|| geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
 
-			List triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+			List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
 			Log.e("LiferayHome", "Event!" + triggeringGeofences.get(0).toString());
 
 			createNotification(triggeringGeofences,
 				geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ? "close to" : "leaving");
-			Log.i(MainActivity.TAG, triggeringGeofences.toString());
+			Log.i(HomeActivity.TAG, triggeringGeofences.toString());
 		} else {
-			Log.e(MainActivity.TAG, "Error!");
+			Log.e(HomeActivity.TAG, "Error!");
 		}
 	}
 

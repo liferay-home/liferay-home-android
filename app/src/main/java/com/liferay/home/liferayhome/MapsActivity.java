@@ -24,7 +24,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
-import org.greenrobot.eventbus.EventBus;
 
 public class MapsActivity extends FragmentActivity
 	implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener, ResultCallback<Status>,
@@ -39,7 +38,7 @@ public class MapsActivity extends FragmentActivity
 		setContentView(R.layout.activity_maps);
 
 		position = getIntent().getParcelableExtra("position");
-		Log.d(MainActivity.TAG, String.valueOf(position));
+		Log.d(HomeActivity.TAG, String.valueOf(position));
 
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
@@ -95,15 +94,10 @@ public class MapsActivity extends FragmentActivity
 
 	@Override
 	public void onResult(@NonNull Status status) {
-		Log.e(MainActivity.TAG, status.toString());
+		Log.e(HomeActivity.TAG, status.toString());
 	}
 
-	//	LocationServices.GeofencingApi.removeGeofences(
-	//	mGoogleApiClient,
-	//	// This is the same pending intent that was used in addGeofences().
-	//	getGeofencePendingIntent()
-	//    ).setResultCallback(this); // Result processed in onResult().
-	//}
+	//FIXME unregister
 
 	@Override
 	public void onMapReady(GoogleMap googleMap) {

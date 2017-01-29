@@ -1,9 +1,9 @@
 package com.liferay.home.liferayhome;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.google.api.services.calendar.model.Event;
@@ -12,6 +12,7 @@ import com.liferay.home.liferayhome.interactors.CalendarRequest;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import static com.liferay.home.liferayhome.PreferencesUtil.PREF_DEVICE_NAME;
 import static com.liferay.home.liferayhome.PreferencesUtil.getPreference;
 import static com.liferay.home.liferayhome.PreferencesUtil.savePreference;
 
@@ -27,11 +28,8 @@ public class SettingsActivity extends LiferayHomeActivity implements View.OnClic
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 
-		Button connectPhone = (Button) findViewById(R.id.connect_phone);
-		connectPhone.setOnClickListener(this);
-
-		Button connectCalendar = (Button) findViewById(R.id.calendar);
-		connectCalendar.setOnClickListener(this);
+		findViewById(R.id.connect_phone).setOnClickListener(this);
+		findViewById(R.id.calendar).setOnClickListener(this);
 
 		celsius = (TextView) findViewById(R.id.celsius);
 		celsius.setOnClickListener(this);
@@ -39,19 +37,19 @@ public class SettingsActivity extends LiferayHomeActivity implements View.OnClic
 		fahrenheit = (TextView) findViewById(R.id.fahrenheit);
 		fahrenheit.setOnClickListener(this);
 
-		final EditText piName = (EditText) findViewById(R.id.pi_name);
+		final EditText deviceNameEdit = (EditText) findViewById(R.id.device_name_edit);
 
-		String piNameValue = PreferencesUtil.getStrPreference(this, "piname");
-		if (piNameValue != null) {
-			piName.setText(piNameValue);
+		String deviceName = PreferencesUtil.getStrPreference(this, PREF_DEVICE_NAME);
+		if (deviceName != null) {
+			deviceNameEdit.setText(deviceName);
 		}
 
-
-		piName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		deviceNameEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
-					PreferencesUtil.savePreference(SettingsActivity.this, "piname", piName.getText().toString());
+					PreferencesUtil.savePreference(SettingsActivity.this, PREF_DEVICE_NAME,
+						deviceNameEdit.getText().toString());
 				}
 			}
 		});
@@ -71,9 +69,9 @@ public class SettingsActivity extends LiferayHomeActivity implements View.OnClic
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onMessageEvent(Events events) {
-		Log.e(MainActivity.TAG, events.getSummary());
+		Log.e(TAG, events.getSummary());
 		for (Event event : events.getItems()) {
-			Log.d(MainActivity.TAG, "Event: " + event.getSummary());
+			Log.d(TAG, "Event: " + event.getSummary());
 		}
 	}
 
@@ -93,7 +91,7 @@ public class SettingsActivity extends LiferayHomeActivity implements View.OnClic
 	}
 
 	private void fahrenheit() {
-		celsius.setTextColor(getResources().getColor(R.color.colorAccent));
+		celsius.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
 		fahrenheit.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
 		savePreference(this, CELSIUS, false);
 	}
@@ -105,6 +103,7 @@ public class SettingsActivity extends LiferayHomeActivity implements View.OnClic
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onMessageEvent(String success) {
+	public void onMessageEvent(String result) {
+		Log.d(TAG, result);
 	}
 }

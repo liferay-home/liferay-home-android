@@ -18,6 +18,7 @@ import static com.liferay.home.liferayhome.PreferencesUtil.savePreference;
 
 public abstract class LiferayHomeActivity extends AppCompatActivity {
 
+	protected static final String TAG = "LiferayHome";
 	protected GoogleAccountCredential credential;
 
 	private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };

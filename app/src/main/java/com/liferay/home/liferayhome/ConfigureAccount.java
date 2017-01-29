@@ -2,7 +2,6 @@ package com.liferay.home.liferayhome;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
@@ -40,21 +39,21 @@ public class ConfigureAccount extends LiferayHomeActivity implements View.OnClic
 
 				Gson gson = new Gson();
 				try {
-					String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+					String androidId = PreferencesUtil.getDeviceId(ConfigureAccount.this);
 					RequestBody user = RequestBody.create(JSON,
-						gson.toJson(new User(null, credential.getSelectedAccountName(), credential.getToken())));
+						gson.toJson(new User(credential.getSelectedAccountName(), credential.getToken())));
 
 					Request request = new Request.Builder().url(BASE_URL + "/users").post(user).build();
 					Response response = client.newCall(request).execute();
 					String result = response.body().string();
-					Log.d(MainActivity.TAG, result);
+					Log.d(TAG, result);
 
-					RequestBody device =
-						RequestBody.create(JSON, gson.toJson(new Device(null, "", androidId, "HOME", "")));
+					RequestBody device = RequestBody.create(JSON, gson.toJson(new Device("", androidId)));
 					request = new Request.Builder().url(BASE_URL + "/devices").post(device).build();
 					response = client.newCall(request).execute();
 					result = response.body().string();
-					Log.d(MainActivity.TAG, result);
+					Log.d(TAG, result);
 
 					EventBus.getDefault().post("Success!");
 				} catch (Exception e) {

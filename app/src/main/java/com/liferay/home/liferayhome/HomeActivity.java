@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -33,6 +34,8 @@ import okhttp3.Response;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import static com.liferay.home.liferayhome.PreferencesUtil.PREF_DEVICE_NAME;
 
 public class HomeActivity extends LiferayHomeActivity
 	implements NavigationView.OnNavigationItemSelectedListener, LocationListener, GoogleApiClient.ConnectionCallbacks,
@@ -62,13 +65,12 @@ public class HomeActivity extends LiferayHomeActivity
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
 
-		TextView piNameField = (TextView) findViewById(R.id.pi_name);
-
-		TextView textView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.my_pi_name);
-		String piNameValue = PreferencesUtil.getStrPreference(this, "piname");
-		if (piNameValue != null) {
-			textView.setText(piNameValue);
-			piNameField.setText(piNameValue);
+		TextView deviceNameText = (TextView) findViewById(R.id.device_name_text);
+		TextView deviceNameHeader = (TextView) navigationView.getHeaderView(0).findViewById(R.id.device_name_header);
+		String deviceName = PreferencesUtil.getStrPreference(this, PREF_DEVICE_NAME);
+		if (deviceName != null) {
+			deviceNameHeader.setText(deviceName);
+			deviceNameText.setText(deviceName);
 		}
 
 		if (googleApiClient == null) {
@@ -120,7 +122,7 @@ public class HomeActivity extends LiferayHomeActivity
 		}
 
 		TextView temperature = (TextView) findViewById(R.id.temperature1);
-		temperature.setText(String.valueOf(((int) (value* 100.0)/100.0)) + "º");
+		temperature.setText(String.valueOf(((int) (value * 100.0) / 100.0)) + "º");
 	}
 
 	protected void onStart() {
@@ -140,9 +142,10 @@ public class HomeActivity extends LiferayHomeActivity
 		refreshTemperature(progress);
 
 		SeekArc seekArc = (SeekArc) findViewById(R.id.seekArc);
-		seekArc.setArcColor(getResources().getColor(R.color.colorAccent));
+
+		seekArc.setArcColor(ContextCompat.getColor(this, R.color.colorAccent));
 		seekArc.setArcWidth(30);
-		seekArc.setProgressColor(getResources().getColor(R.color.colorPrimary));
+		seekArc.setProgressColor(ContextCompat.getColor(this, R.color.colorPrimary));
 		seekArc.setOnSeekArcChangeListener(this);
 		seekArc.setProgress(progress.intValue());
 		seekArc.setProgressWidth(30);
@@ -206,16 +209,15 @@ public class HomeActivity extends LiferayHomeActivity
 
 					Gson gson = new Gson();
 					try {
-						String deviceId = PreferencesUtil.getDeviceId(HomeActivity.this);
 						RequestBody phoneLocation =
-							RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(
-								new PhoneLocation(null, location.getLongitude(), location.getLatitude(), null)));
+							RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
+								gson.toJson(new PhoneLocation(location.getLongitude(), location.getLatitude())));
 
 						Request request =
 							new Request.Builder().url(BASE_URL + "/locations").post(phoneLocation).build();
 						Response response = client.newCall(request).execute();
 						String result = response.body().string();
-						Log.d(MainActivity.TAG, result);
+						Log.d(TAG, result);
 
 						EventBus.getDefault().post("Success!");
 					} catch (Exception e) {
@@ -256,22 +258,7 @@ public class HomeActivity extends LiferayHomeActivity
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-
-		//noinspection SimplifiableIfStatement
-		//if (id == R.id.action_settings) {
-		//	return true;
-		//}
-
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public boolean onNavigationItemSelected(MenuItem item) {
+	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 		int id = item.getItemId();
 
 		if (id == R.id.set_your_home) {
@@ -296,7 +283,7 @@ public class HomeActivity extends LiferayHomeActivity
 	@Override
 	public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
 		if (b) {
-			Log.d(MainActivity.TAG, String.valueOf(i));
+			Log.d(TAG, String.valueOf(i));
 			progress = (double) i;
 			refreshTemperature(progress);
 		}

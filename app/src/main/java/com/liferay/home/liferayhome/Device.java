@@ -8,12 +8,11 @@ public class Device {
 	public String type;
 	public String name;
 
-	public Device(Integer id, String description, String serialNumber, String type, String name) {
-		this.id = id;
+	public Device(String description, String serialNumber) {
 		this.description = description;
 		this.serialNumber = serialNumber;
-		this.type = type;
-		this.name = name;
+		this.type = "Home";
+		this.name = "";
 	}
 
 	public Integer getId() {

@@ -23,29 +23,31 @@
 			/>
 
 		<Button
+			android:id="@+id/calendar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:id="@+id/calendar"
 			android:text="Connect Calendar"
 			/>
 
 	</LinearLayout>
 
 	<EditText
-		android:id="@+id/pi_location"
+		android:id="@+id/device_location_edit"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/settings_buttons"
+		android:hint="Device Location"
 		android:paddingTop="50dp"
 		android:text="Home Pi"
 		/>
 
 	<EditText
-		android:id="@+id/pi_name"
+		android:id="@+id/device_name_edit"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/pi_location"
+		android:layout_below="@+id/device_location_edit"
+		android:hint="Device Name"
 		android:paddingTop="50dp"
 		android:text="My Pi Name"
 		/>
@@ -54,7 +56,7 @@
 		android:id="@+id/separator"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/pi_name"
+		android:layout_below="@+id/device_name_edit"
 		android:layout_centerHorizontal="true"
 		android:padding="10dp"
 		android:text="|"
@@ -66,7 +68,7 @@
 		android:id="@+id/celsius"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/pi_name"
+		android:layout_below="@+id/device_name_edit"
 		android:layout_toLeftOf="@+id/separator"
 		android:padding="10dp"
 		android:text="C"
@@ -78,7 +80,7 @@
 		android:id="@+id/fahrenheit"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/pi_name"
+		android:layout_below="@+id/device_name_edit"
 		android:layout_toRightOf="@+id/separator"
 		android:padding="10dp"
 		android:text="F"
