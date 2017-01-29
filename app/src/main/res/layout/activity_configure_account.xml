@@ -13,6 +13,7 @@
 		android:layout_height="wrap_content"
 		android:layout_above="@+id/configure_account"
 		android:layout_centerHorizontal="true"
+		android:contentDescription="@string/settings_icon"
 		android:paddingBottom="20dp"
 		android:src="@drawable/ic_menu_manage"
 		android:tint="@android:color/white"
@@ -24,7 +25,7 @@
 		android:layout_height="wrap_content"
 		android:layout_centerInParent="true"
 		android:gravity="center_horizontal"
-		android:text="It looks like you haven't configured an account!"
+		android:text="@string/tutorial_description"
 		android:textColor="@android:color/white"
 		android:textSize="40sp"
 		/>
@@ -34,7 +35,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
-		android:text="Configure"
+		android:text="@string/configure"
 		/>
 
 </RelativeLayout>

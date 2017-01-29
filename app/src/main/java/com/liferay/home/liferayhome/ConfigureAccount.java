@@ -18,6 +18,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class ConfigureAccount extends LiferayHomeActivity implements View.OnClickListener {
 
 	public static final String BASE_URL = "http://app.liferay-home.wedeploy.io";
+	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +27,6 @@ public class ConfigureAccount extends LiferayHomeActivity implements View.OnClic
 
 		findViewById(R.id.button_configure).setOnClickListener(this);
 	}
-
-	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
 	@Override
 	protected void doSomethingWithAnAccount() {
@@ -70,6 +69,9 @@ public class ConfigureAccount extends LiferayHomeActivity implements View.OnClic
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onMessageEvent(String success) {
+
+		Log.d(TAG, success);
+
 		View content = findViewById(android.R.id.content);
 		Snackbar.make(content, "User registered successfully!", Snackbar.LENGTH_SHORT).show();
 

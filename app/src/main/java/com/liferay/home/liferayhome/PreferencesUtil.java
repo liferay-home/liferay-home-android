@@ -1,16 +1,18 @@
 package com.liferay.home.liferayhome;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
 
 public class PreferencesUtil {
 
-	public static final String LIFERAY_HOME_DB = "LIFERAY_HOME_DB";
 	public static final String PREF_ACCOUNT_NAME = "PREF_ACCOUNT_NAME";
 	public static final String PREF_DEVICE_NAME = "PREF_DEVICE_NAME";
 	public static final int REQUEST_ACCOUNT_PICKER = 1000;
+	private static final String LIFERAY_HOME_DB = "LIFERAY_HOME_DB";
 
+	@SuppressLint("HardwareIds")
 	public static String getDeviceId(Context context) {
 		return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 	}

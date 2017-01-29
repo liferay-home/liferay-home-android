@@ -1,10 +1,16 @@
 package com.liferay.home.liferayhome;
 
 public class PhoneLocation {
-	Integer id;
-	Double longitude;
-	Double latitude;
-	String device;
+
+	private Integer id;
+	private Double longitude;
+	private Double latitude;
+	private String device;
+
+	public PhoneLocation(Double longitude, Double latitude) {
+		this.longitude = longitude;
+		this.latitude = latitude;
+	}
 
 	public Integer getId() {
 		return id;
@@ -16,11 +22,6 @@ public class PhoneLocation {
 
 	public Double getLongitude() {
 		return longitude;
-	}
-
-	public PhoneLocation(Double longitude, Double latitude) {
-		this.longitude = longitude;
-		this.latitude = latitude;
 	}
 
 	public void setLongitude(Double longitude) {

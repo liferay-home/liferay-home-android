@@ -41,9 +41,9 @@ public class HomeActivity extends LiferayHomeActivity
 	implements NavigationView.OnNavigationItemSelectedListener, LocationListener, GoogleApiClient.ConnectionCallbacks,
 	GoogleApiClient.OnConnectionFailedListener, SeekArc.OnSeekArcChangeListener {
 
+	public static final String BASE_URL = "http://app.liferay-home.wedeploy.io";
 	private static final String LOCATION_KEY = "LOCATION_KEY";
 	private static final String LAST_UPDATED_TIME_STRING_KEY = "LAST_UPDATED_TIME_STRING_KEY";
-	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 	private GoogleApiClient googleApiClient;
 	private Location lastLocation;
 	private Date lastUpdateTime;
@@ -59,7 +59,7 @@ public class HomeActivity extends LiferayHomeActivity
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open,
 			R.string.navigation_drawer_close);
-		drawer.setDrawerListener(toggle);
+		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -189,8 +189,6 @@ public class HomeActivity extends LiferayHomeActivity
 	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
 	}
-
-	public static final String BASE_URL = "http://app.liferay-home.wedeploy.io";
 
 	@Override
 	public void onLocationChanged(final Location location) {

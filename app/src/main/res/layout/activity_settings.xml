@@ -19,7 +19,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="Unregister Phone"
+			android:text="@string/unregister_phone"
+			style="?android:attr/buttonBarButtonStyle"
 			/>
 
 		<Button
@@ -27,7 +28,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="Connect Calendar"
+			android:text="@string/connect_calendar"
+			style="?android:attr/buttonBarButtonStyle"
 			/>
 
 	</LinearLayout>
@@ -37,9 +39,9 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/settings_buttons"
-		android:hint="Device Location"
+		android:hint="@string/device_location"
 		android:paddingTop="50dp"
-		android:text="Home Pi"
+		android:text="@string/my_device_location"
 		/>
 
 	<EditText
@@ -47,9 +49,9 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/device_location_edit"
-		android:hint="Device Name"
+		android:hint="@string/device_name"
 		android:paddingTop="50dp"
-		android:text="My Pi Name"
+		android:text="@string/device_name"
 		/>
 
 	<TextView
@@ -59,7 +61,7 @@
 		android:layout_below="@+id/device_name_edit"
 		android:layout_centerHorizontal="true"
 		android:padding="10dp"
-		android:text="|"
+		android:text="@string/separator"
 		android:textColor="@color/colorPrimary"
 		android:textSize="60sp"
 		/>
@@ -71,7 +73,7 @@
 		android:layout_below="@+id/device_name_edit"
 		android:layout_toLeftOf="@+id/separator"
 		android:padding="10dp"
-		android:text="C"
+		android:text="@string/c"
 		android:textColor="@color/colorPrimaryDark"
 		android:textSize="60sp"
 		/>
@@ -83,7 +85,7 @@
 		android:layout_below="@+id/device_name_edit"
 		android:layout_toRightOf="@+id/separator"
 		android:padding="10dp"
-		android:text="F"
+		android:text="@string/f"
 		android:textColor="@color/colorPrimary"
 		android:textSize="60sp"
 		/>

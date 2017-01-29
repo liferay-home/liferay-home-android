@@ -92,13 +92,13 @@ public class SettingsActivity extends LiferayHomeActivity implements View.OnClic
 
 	private void fahrenheit() {
 		celsius.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
-		fahrenheit.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+		fahrenheit.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 		savePreference(this, CELSIUS, false);
 	}
 
 	private void celsius() {
-		celsius.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-		fahrenheit.setTextColor(getResources().getColor(R.color.colorAccent));
+		celsius.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+		fahrenheit.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
 		savePreference(this, CELSIUS, true);
 	}
 

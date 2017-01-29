@@ -4,4 +4,21 @@
 	<string name="navigation_drawer_close">Close navigation drawer</string>
 
 	<string name="title_activity_maps">Map</string>
+	<string name="tutorial_description">It looks like you haven\'t configured an account!</string>
+	<string name="configure">Configure</string>
+	<string name="home">Home</string>
+	<string name="set_your_home">Set your Home</string>
+	<string name="configure_your_pi">Configure your Pi</string>
+	<string name="unregister_phone">Unregister Phone</string>
+	<string name="connect_calendar">Connect Calendar</string>
+	<string name="device_location">Device Location</string>
+	<string name="my_device_location">Home Pi</string>
+	<string name="device_name">Device Name</string>
+	<string name="separator">|</string>
+	<string name="c">C</string>
+	<string name="f">F</string>
+	<string name="liferay_home">Liferay Home</string>
+	<string name="current_temp">current temp</string>
+	<string name="settings_icon">Settings Icon</string>
+	<string name="liferay_home_logo">Liferay Home Logo</string>
 </resources>

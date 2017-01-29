@@ -5,15 +5,15 @@
 		<item
 			android:id="@+id/home"
 			android:icon="@drawable/ic_home_black_24dp"
-			android:title="Home"/>
+			android:title="@string/home"/>
 		<item
 			android:id="@+id/set_your_home"
 			android:icon="@drawable/ic_add_location_black_24dp"
-			android:title="Set your Home"/>
+			android:title="@string/set_your_home"/>
 		<item
 			android:id="@+id/settings"
 			android:icon="@drawable/ic_menu_manage"
-			android:title="Configure your Pi"/>
+			android:title="@string/configure_your_pi"/>
 	</group>
 
 	<!--<item android:title="">

@@ -2,17 +2,17 @@ package com.liferay.home.liferayhome;
 
 public class Device {
 
-	public Integer id;
-	public String description;
-	public String serialNumber;
-	public String type;
-	public String name;
+	private Integer id;
+	private String description;
+	private String serialNumber;
+	private String type;
+	private String name;
 
-	public Device(String description, String serialNumber) {
-		this.description = description;
+	public Device(String serialNumber) {
 		this.serialNumber = serialNumber;
 		this.type = "Home";
 		this.name = "";
+		this.description = "";
 	}
 
 	public Integer getId() {
