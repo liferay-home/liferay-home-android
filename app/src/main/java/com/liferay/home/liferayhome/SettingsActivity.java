@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
-import com.liferay.home.liferayhome.interactors.CalendarRequest;
+import com.liferay.home.liferayhome.interactors.CalendarInteractor;
 import com.liferay.home.liferayhome.utils.PreferencesUtil;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -38,6 +38,16 @@ public class SettingsActivity extends LiferayHomeActivity implements View.OnClic
 		fahrenheit = (TextView) findViewById(R.id.fahrenheit);
 		fahrenheit.setOnClickListener(this);
 
+		saveDeviceName();
+
+		if (getPreference(this, CELSIUS)) {
+			celsius();
+		} else {
+			fahrenheit();
+		}
+	}
+
+	private void saveDeviceName() {
 		final EditText deviceNameEdit = (EditText) findViewById(R.id.device_name_edit);
 
 		String deviceName = PreferencesUtil.getStrPreference(this, PREF_DEVICE_NAME);
@@ -54,23 +64,17 @@ public class SettingsActivity extends LiferayHomeActivity implements View.OnClic
 				}
 			}
 		});
-
-		if (getPreference(this, CELSIUS)) {
-			celsius();
-		} else {
-			fahrenheit();
-		}
 	}
 
 	@Override
 	protected void doSomethingWithAnAccount() {
-		CalendarRequest calendarRequest = new CalendarRequest(credential);
-		new Thread(calendarRequest).start();
+		CalendarInteractor calendarInteractor = new CalendarInteractor(credential);
+		new Thread(calendarInteractor).start();
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onMessageEvent(Events events) {
-		Log.e(TAG, events.getSummary());
+		Log.d(TAG, events.getSummary());
 		for (Event event : events.getItems()) {
 			Log.d(TAG, "Event: " + event.getSummary());
 		}

@@ -12,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
@@ -20,20 +19,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.liferay.home.liferayhome.models.PhoneLocation;
+import com.liferay.home.liferayhome.interactors.LocationInteractor;
+import com.liferay.home.liferayhome.interactors.SensorInteractor;
 import com.liferay.home.liferayhome.utils.PreferencesUtil;
 import com.triggertrap.seekarc.SeekArc;
 import java.util.Date;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -87,34 +77,7 @@ public class HomeActivity extends LiferayHomeActivity
 	protected void onResume() {
 		super.onResume();
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-
-				OkHttpClient client = new OkHttpClient();
-				try {
-					Request request = new Request.Builder().url(BASE_URL + "/sensor-data").get().build();
-					Response response = client.newCall(request).execute();
-					String result = response.body().string();
-
-					JsonElement jsonElement = new JsonParser().parse(result);
-					JsonArray jsonArray = jsonElement.getAsJsonObject()
-						.get("_embedded")
-						.getAsJsonObject()
-						.get("sensorDatas")
-						.getAsJsonArray();
-
-					for (int i = jsonArray.size() - 1; i > 0; i--) {
-						if (jsonArray.get(i).getAsJsonObject().get("type").getAsString().equals("TEMPERATURE")) {
-							EventBus.getDefault().post(jsonArray.get(i).getAsJsonObject().get("value").getAsDouble());
-							break;
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
+		new Thread(new SensorInteractor()).start();
 	}
 
 	private void refreshTemperature(Double value) {
@@ -201,30 +164,7 @@ public class HomeActivity extends LiferayHomeActivity
 			lastLocation = location;
 			lastUpdateTime = new Date();
 
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-
-					OkHttpClient client = new OkHttpClient();
-
-					Gson gson = new Gson();
-					try {
-						RequestBody phoneLocation =
-							RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
-								gson.toJson(new PhoneLocation(location.getLongitude(), location.getLatitude())));
-
-						Request request =
-							new Request.Builder().url(BASE_URL + "/locations").post(phoneLocation).build();
-						Response response = client.newCall(request).execute();
-						String result = response.body().string();
-						Log.d(TAG, result);
-
-						EventBus.getDefault().post("Success!");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}).start();
+			new Thread(new LocationInteractor(lastLocation)).start();
 		}
 	}
 

@@ -11,11 +11,11 @@ import com.google.api.services.calendar.model.Events;
 import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
 
-public class CalendarRequest implements Runnable {
+public class CalendarInteractor implements Runnable {
 
 	private final GoogleAccountCredential credential;
 
-	public CalendarRequest(GoogleAccountCredential credential) {
+	public CalendarInteractor(GoogleAccountCredential credential) {
 		this.credential = credential;
 	}
 

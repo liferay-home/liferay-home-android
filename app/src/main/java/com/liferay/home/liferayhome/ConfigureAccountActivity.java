@@ -5,23 +5,11 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
-import com.google.gson.Gson;
-import com.liferay.home.liferayhome.models.Device;
-import com.liferay.home.liferayhome.models.User;
-import com.liferay.home.liferayhome.utils.PreferencesUtil;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import org.greenrobot.eventbus.EventBus;
+import com.liferay.home.liferayhome.interactors.ConfigureInteractor;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class ConfigureAccountActivity extends LiferayHomeActivity implements View.OnClickListener {
-
-	public static final String BASE_URL = "http://app.liferay-home.wedeploy.io";
-	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,36 +21,7 @@ public class ConfigureAccountActivity extends LiferayHomeActivity implements Vie
 
 	@Override
 	protected void doSomethingWithAnAccount() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-
-				OkHttpClient client = new OkHttpClient();
-
-				Gson gson = new Gson();
-				try {
-
-					String androidId = PreferencesUtil.getDeviceId(ConfigureAccountActivity.this);
-					RequestBody user = RequestBody.create(JSON,
-						gson.toJson(new User(credential.getSelectedAccountName(), credential.getToken())));
-
-					Request request = new Request.Builder().url(BASE_URL + "/users").post(user).build();
-					Response response = client.newCall(request).execute();
-					String result = response.body().string();
-					Log.d(TAG, result);
-
-					RequestBody device = RequestBody.create(JSON, gson.toJson(new Device(androidId)));
-					request = new Request.Builder().url(BASE_URL + "/devices").post(device).build();
-					response = client.newCall(request).execute();
-					result = response.body().string();
-					Log.d(TAG, result);
-
-					EventBus.getDefault().post("Success!");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
+		new Thread(new ConfigureInteractor()).start();
 	}
 
 	@Override
