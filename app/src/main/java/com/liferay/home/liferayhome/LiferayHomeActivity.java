@@ -12,13 +12,13 @@ import com.google.api.services.calendar.CalendarScopes;
 import java.util.Arrays;
 import org.greenrobot.eventbus.EventBus;
 
-import static com.liferay.home.liferayhome.PreferencesUtil.PREF_ACCOUNT_NAME;
-import static com.liferay.home.liferayhome.PreferencesUtil.REQUEST_ACCOUNT_PICKER;
-import static com.liferay.home.liferayhome.PreferencesUtil.savePreference;
+import static com.liferay.home.liferayhome.utils.PreferencesUtil.PREF_ACCOUNT_NAME;
+import static com.liferay.home.liferayhome.utils.PreferencesUtil.REQUEST_ACCOUNT_PICKER;
+import static com.liferay.home.liferayhome.utils.PreferencesUtil.savePreference;
 
 public abstract class LiferayHomeActivity extends AppCompatActivity {
 
-	protected static final String TAG = "LiferayHome";
+	public static final String TAG = "LiferayHome";
 	private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 	protected GoogleAccountCredential credential;
 

@@ -6,6 +6,9 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import com.google.gson.Gson;
+import com.liferay.home.liferayhome.models.Device;
+import com.liferay.home.liferayhome.models.User;
+import com.liferay.home.liferayhome.utils.PreferencesUtil;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,7 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class ConfigureAccount extends LiferayHomeActivity implements View.OnClickListener {
+public class ConfigureAccountActivity extends LiferayHomeActivity implements View.OnClickListener {
 
 	public static final String BASE_URL = "http://app.liferay-home.wedeploy.io";
 	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -39,7 +42,7 @@ public class ConfigureAccount extends LiferayHomeActivity implements View.OnClic
 				Gson gson = new Gson();
 				try {
 
-					String androidId = PreferencesUtil.getDeviceId(ConfigureAccount.this);
+					String androidId = PreferencesUtil.getDeviceId(ConfigureAccountActivity.this);
 					RequestBody user = RequestBody.create(JSON,
 						gson.toJson(new User(credential.getSelectedAccountName(), credential.getToken())));
 
@@ -48,7 +51,7 @@ public class ConfigureAccount extends LiferayHomeActivity implements View.OnClic
 					String result = response.body().string();
 					Log.d(TAG, result);
 
-					RequestBody device = RequestBody.create(JSON, gson.toJson(new Device("", androidId)));
+					RequestBody device = RequestBody.create(JSON, gson.toJson(new Device(androidId)));
 					request = new Request.Builder().url(BASE_URL + "/devices").post(device).build();
 					response = client.newCall(request).execute();
 					result = response.body().string();

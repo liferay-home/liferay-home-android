@@ -1,4 +1,4 @@
-package com.liferay.home.liferayhome;
+package com.liferay.home.liferayhome.models;
 
 public class User {
 

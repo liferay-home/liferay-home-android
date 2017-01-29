@@ -9,12 +9,13 @@ import android.widget.TextView;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import com.liferay.home.liferayhome.interactors.CalendarRequest;
+import com.liferay.home.liferayhome.utils.PreferencesUtil;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import static com.liferay.home.liferayhome.PreferencesUtil.PREF_DEVICE_NAME;
-import static com.liferay.home.liferayhome.PreferencesUtil.getPreference;
-import static com.liferay.home.liferayhome.PreferencesUtil.savePreference;
+import static com.liferay.home.liferayhome.utils.PreferencesUtil.PREF_DEVICE_NAME;
+import static com.liferay.home.liferayhome.utils.PreferencesUtil.getPreference;
+import static com.liferay.home.liferayhome.utils.PreferencesUtil.savePreference;
 
 public class SettingsActivity extends LiferayHomeActivity implements View.OnClickListener {
 

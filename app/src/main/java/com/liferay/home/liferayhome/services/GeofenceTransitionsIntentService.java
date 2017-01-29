@@ -1,4 +1,4 @@
-package com.liferay.home.liferayhome;
+package com.liferay.home.liferayhome.services;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -10,6 +10,8 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
+import com.liferay.home.liferayhome.HomeActivity;
+import com.liferay.home.liferayhome.R;
 import java.util.List;
 
 public class GeofenceTransitionsIntentService extends IntentService {

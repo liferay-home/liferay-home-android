@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.liferay.home.liferayhome.models.PhoneLocation;
+import com.liferay.home.liferayhome.utils.PreferencesUtil;
 import com.triggertrap.seekarc.SeekArc;
 import java.util.Date;
 import okhttp3.MediaType;
@@ -35,7 +37,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import static com.liferay.home.liferayhome.PreferencesUtil.PREF_DEVICE_NAME;
+import static com.liferay.home.liferayhome.utils.PreferencesUtil.PREF_DEVICE_NAME;
 
 public class HomeActivity extends LiferayHomeActivity
 	implements NavigationView.OnNavigationItemSelectedListener, LocationListener, GoogleApiClient.ConnectionCallbacks,
@@ -246,13 +248,6 @@ public class HomeActivity extends LiferayHomeActivity
 		} else {
 			super.onBackPressed();
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home, menu);
-		return true;
 	}
 
 	@Override
