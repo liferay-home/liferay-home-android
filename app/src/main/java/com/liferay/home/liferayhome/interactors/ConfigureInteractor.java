@@ -1,9 +1,9 @@
 package com.liferay.home.liferayhome.interactors;
 
+import android.content.Context;
 import android.util.Log;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.gson.Gson;
-import com.liferay.home.liferayhome.ConfigureAccountActivity;
-import com.liferay.home.liferayhome.interactors.Interactor;
 import com.liferay.home.liferayhome.models.Device;
 import com.liferay.home.liferayhome.models.User;
 import com.liferay.home.liferayhome.utils.PreferencesUtil;
@@ -13,16 +13,25 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.greenrobot.eventbus.EventBus;
 
+import static com.liferay.home.liferayhome.LiferayHomeActivity.TAG;
+
 public class ConfigureInteractor extends Interactor {
+
+	private final Context context;
+	private final GoogleAccountCredential credential;
+
+	public ConfigureInteractor(Context context, GoogleAccountCredential credential) {
+		this.context = context;
+		this.credential = credential;
+	}
 
 	@Override
 	public void run() {
-		OkHttpClient client = new OkHttpClient();
-
-		Gson gson = new Gson();
 		try {
+			OkHttpClient client = new OkHttpClient();
+			Gson gson = new Gson();
 
-			String androidId = PreferencesUtil.getDeviceId(ConfigureAccountActivity.this);
+			String androidId = PreferencesUtil.getDeviceId(context);
 			RequestBody user = RequestBody.create(JSON,
 				gson.toJson(new User(credential.getSelectedAccountName(), credential.getToken())));
 
@@ -39,7 +48,7 @@ public class ConfigureInteractor extends Interactor {
 
 			EventBus.getDefault().post("Success!");
 		} catch (Exception e) {
-			e.printStackTrace();
+			EventBus.getDefault().post(e);
 		}
 	}
 }

@@ -21,7 +21,7 @@ public class ConfigureAccountActivity extends LiferayHomeActivity implements Vie
 
 	@Override
 	protected void doSomethingWithAnAccount() {
-		new Thread(new ConfigureInteractor()).start();
+		new Thread(new ConfigureInteractor(this, credential)).start();
 	}
 
 	@Override
