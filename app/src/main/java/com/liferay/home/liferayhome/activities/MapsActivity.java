@@ -1,4 +1,4 @@
-package com.liferay.home.liferayhome;
+package com.liferay.home.liferayhome.activities;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -22,6 +22,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.liferay.home.liferayhome.R;
 import com.liferay.home.liferayhome.services.GeofenceTransitionsIntentService;
 import java.util.ArrayList;
 import java.util.List;

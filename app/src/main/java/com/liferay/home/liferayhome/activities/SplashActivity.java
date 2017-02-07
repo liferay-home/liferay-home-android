@@ -1,9 +1,10 @@
-package com.liferay.home.liferayhome;
+package com.liferay.home.liferayhome.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import com.liferay.home.liferayhome.R;
 import com.liferay.home.liferayhome.utils.PreferencesUtil;
 
 public class SplashActivity extends AppCompatActivity {

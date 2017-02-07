@@ -1,4 +1,4 @@
-package com.liferay.home.liferayhome;
+package com.liferay.home.liferayhome.activities;
 
 import android.content.Intent;
 import android.location.Location;
@@ -19,6 +19,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.liferay.home.liferayhome.R;
 import com.liferay.home.liferayhome.interactors.LocationInteractor;
 import com.liferay.home.liferayhome.interactors.SensorInteractor;
 import com.liferay.home.liferayhome.utils.PreferencesUtil;

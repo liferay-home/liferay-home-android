@@ -1,4 +1,4 @@
-package com.liferay.home.liferayhome;
+package com.liferay.home.liferayhome.activities;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
+import com.liferay.home.liferayhome.R;
 import com.liferay.home.liferayhome.interactors.CalendarInteractor;
 import com.liferay.home.liferayhome.utils.PreferencesUtil;
 import org.greenrobot.eventbus.Subscribe;

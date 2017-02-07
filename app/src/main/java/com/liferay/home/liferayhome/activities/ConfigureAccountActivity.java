@@ -1,10 +1,11 @@
-package com.liferay.home.liferayhome;
+package com.liferay.home.liferayhome.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
+import com.liferay.home.liferayhome.R;
 import com.liferay.home.liferayhome.interactors.ConfigureInteractor;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

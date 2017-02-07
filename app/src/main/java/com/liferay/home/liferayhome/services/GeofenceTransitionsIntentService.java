@@ -10,13 +10,13 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
-import com.liferay.home.liferayhome.HomeActivity;
 import com.liferay.home.liferayhome.R;
+import com.liferay.home.liferayhome.activities.HomeActivity;
 import java.util.List;
 
 import static com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER;
 import static com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT;
-import static com.liferay.home.liferayhome.LiferayHomeActivity.TAG;
+import static com.liferay.home.liferayhome.activities.LiferayHomeActivity.TAG;
 
 public class GeofenceTransitionsIntentService extends IntentService {
 

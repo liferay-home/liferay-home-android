@@ -13,7 +13,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.greenrobot.eventbus.EventBus;
 
-import static com.liferay.home.liferayhome.LiferayHomeActivity.TAG;
+import static com.liferay.home.liferayhome.activities.LiferayHomeActivity.TAG;
 
 public class ConfigureInteractor extends Interactor {
 
