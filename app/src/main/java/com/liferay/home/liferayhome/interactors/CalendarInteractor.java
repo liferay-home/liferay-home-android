@@ -24,12 +24,12 @@ public class CalendarInteractor implements Runnable {
 		try {
 			HttpTransport transport = AndroidHttp.newCompatibleTransport();
 			JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-			Calendar mService =
+			Calendar service =
 				new Calendar.Builder(transport, jsonFactory, credential).setApplicationName("Liferay Home").build();
 
 			DateTime now = new DateTime(System.currentTimeMillis());
 
-			Events events = mService.events()
+			Events events = service.events()
 				.list("primary")
 				.setMaxResults(10)
 				.setTimeMin(now)
