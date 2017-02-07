@@ -31,6 +31,10 @@ public class MapsActivity extends FragmentActivity
 	implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener, ResultCallback<Status>,
 	GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+	//FIXME unregister
+
+	public static final double SAMPLE_LATITUDE = 33.98436373;
+	public static final double SAMPLE_LONGITUDE = -117.39578247;
 	private Location position;
 	private GoogleApiClient googleApiClient;
 
@@ -40,7 +44,6 @@ public class MapsActivity extends FragmentActivity
 		setContentView(R.layout.activity_maps);
 
 		position = getIntent().getParcelableExtra("position");
-		Log.d(HomeActivity.TAG, String.valueOf(position));
 
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
@@ -56,7 +59,7 @@ public class MapsActivity extends FragmentActivity
 	private void createGeofence() {
 		List<Geofence> geofences = new ArrayList<>();
 		geofences.add(new Geofence.Builder().setRequestId("Looking for Home")
-			.setCircularRegion(33.98436373, -117.39578247, 100000)
+			.setCircularRegion(SAMPLE_LATITUDE, SAMPLE_LONGITUDE, 100000)
 			.setExpirationDuration(Geofence.NEVER_EXPIRE)
 			.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
 			.build());
@@ -91,7 +94,6 @@ public class MapsActivity extends FragmentActivity
 
 	@Override
 	public void onConnectionSuspended(int i) {
-
 	}
 
 	@Override
@@ -99,14 +101,11 @@ public class MapsActivity extends FragmentActivity
 		Log.e(HomeActivity.TAG, status.toString());
 	}
 
-	//FIXME unregister
-
 	@Override
 	public void onMapReady(GoogleMap googleMap) {
-
-		LatLng latLng =
-			position == null ? new LatLng(33.88, -117) : new LatLng(position.getLatitude(), position.getLongitude());
-		MarkerOptions markerOptions = new MarkerOptions().position(latLng).zIndex(1).title("Home").draggable(true);
+		LatLng latLng = position == null ? new LatLng(SAMPLE_LATITUDE, SAMPLE_LONGITUDE)
+			: new LatLng(position.getLatitude(), position.getLongitude());
+		MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Home").draggable(true);
 		googleMap.addMarker(markerOptions);
 		googleMap.setOnMarkerDragListener(this);
 		googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));

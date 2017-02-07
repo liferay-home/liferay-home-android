@@ -69,8 +69,7 @@ public class SettingsActivity extends LiferayHomeActivity implements View.OnClic
 
 	@Override
 	protected void doSomethingWithAnAccount() {
-		CalendarInteractor calendarInteractor = new CalendarInteractor(credential);
-		new Thread(calendarInteractor).start();
+		new Thread(new CalendarInteractor(credential)).start();
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)

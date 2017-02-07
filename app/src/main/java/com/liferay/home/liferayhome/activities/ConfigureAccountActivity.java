@@ -10,6 +10,8 @@ import com.liferay.home.liferayhome.interactors.ConfigureInteractor;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import static android.support.design.widget.Snackbar.LENGTH_SHORT;
+
 public class ConfigureAccountActivity extends LiferayHomeActivity implements View.OnClickListener {
 
 	@Override
@@ -32,12 +34,14 @@ public class ConfigureAccountActivity extends LiferayHomeActivity implements Vie
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onMessageEvent(String success) {
-
 		Log.d(TAG, success);
-
-		View content = findViewById(android.R.id.content);
-		Snackbar.make(content, "User registered successfully!", Snackbar.LENGTH_SHORT).show();
-
+		Snackbar.make(content, "User registered successfully!", LENGTH_SHORT).show();
 		startActivity(new Intent(this, HomeActivity.class));
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onMessageEvent(Exception e) {
+		Log.e(TAG, e.toString());
+		Snackbar.make(content, "Error configuring calendar", LENGTH_SHORT).show();
 	}
 }

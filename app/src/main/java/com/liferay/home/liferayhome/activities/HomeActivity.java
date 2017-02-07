@@ -34,7 +34,6 @@ public class HomeActivity extends LiferayHomeActivity
 	implements NavigationView.OnNavigationItemSelectedListener, LocationListener, GoogleApiClient.ConnectionCallbacks,
 	GoogleApiClient.OnConnectionFailedListener, SeekArc.OnSeekArcChangeListener {
 
-	public static final String BASE_URL = "http://app.liferay-home.wedeploy.io";
 	private static final String LOCATION_KEY = "LOCATION_KEY";
 	private static final String LAST_UPDATED_TIME_STRING_KEY = "LAST_UPDATED_TIME_STRING_KEY";
 	private GoogleApiClient googleApiClient;
@@ -81,21 +80,13 @@ public class HomeActivity extends LiferayHomeActivity
 		new Thread(new SensorInteractor()).start();
 	}
 
-	private void refreshTemperature(Double value) {
-		boolean celsius = PreferencesUtil.getPreference(this, SettingsActivity.CELSIUS);
-		if (!celsius) {
-			value = value * 1.8 + 32;
-		}
-
-		TextView temperature = (TextView) findViewById(R.id.temperature1);
-		temperature.setText(String.valueOf(((int) (value * 100.0) / 100.0)) + "º");
-	}
-
+	@Override
 	protected void onStart() {
 		googleApiClient.connect();
 		super.onStart();
 	}
 
+	@Override
 	protected void onStop() {
 		googleApiClient.disconnect();
 		super.onStop();
@@ -119,10 +110,10 @@ public class HomeActivity extends LiferayHomeActivity
 
 	@Override
 	protected void doSomethingWithAnAccount() {
-
 	}
 
-	public void onSaveInstanceState(Bundle savedInstanceState) {
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
 		if (lastLocation != null) {
 			savedInstanceState.putParcelable(LOCATION_KEY, lastLocation);
 		}
@@ -148,12 +139,10 @@ public class HomeActivity extends LiferayHomeActivity
 
 	@Override
 	public void onConnectionSuspended(int i) {
-
 	}
 
 	@Override
 	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
 	}
 
 	@Override
@@ -205,8 +194,7 @@ public class HomeActivity extends LiferayHomeActivity
 			startActivity(intent);
 			overridePendingTransition(0, 0);
 		} else {
-			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
+			startActivity(new Intent(this, SettingsActivity.class));
 		}
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -215,8 +203,8 @@ public class HomeActivity extends LiferayHomeActivity
 	}
 
 	@Override
-	public void onProgressChanged(SeekArc seekArc, int i, boolean b) {
-		if (b) {
+	public void onProgressChanged(SeekArc seekArc, int i, boolean userChanged) {
+		if (userChanged) {
 			Log.d(TAG, String.valueOf(i));
 			progress = (double) i;
 			refreshTemperature(progress);
@@ -225,11 +213,19 @@ public class HomeActivity extends LiferayHomeActivity
 
 	@Override
 	public void onStartTrackingTouch(SeekArc seekArc) {
-
 	}
 
 	@Override
 	public void onStopTrackingTouch(SeekArc seekArc) {
+	}
 
+	private void refreshTemperature(Double value) {
+		boolean celsius = PreferencesUtil.getPreference(this, SettingsActivity.CELSIUS);
+		if (!celsius) {
+			value = value * 1.8 + 32;
+		}
+
+		TextView temperature = (TextView) findViewById(R.id.temperature1);
+		temperature.setText(String.valueOf(((int) (value * 100.0) / 100.0)) + "º");
 	}
 }

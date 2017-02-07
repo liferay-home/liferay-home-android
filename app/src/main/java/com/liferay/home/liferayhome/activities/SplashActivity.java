@@ -15,11 +15,11 @@ public class SplashActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_splash);
 
 		String accountName = PreferencesUtil.getStrPreference(this, PreferencesUtil.PREF_ACCOUNT_NAME);
-		final Class clasz = accountName == null ? ConfigureAccountActivity.class : HomeActivity.class;
+		final Class aClass = accountName == null ? ConfigureAccountActivity.class : HomeActivity.class;
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				startActivity(new Intent(SplashActivity.this, clasz));
+				startActivity(new Intent(SplashActivity.this, aClass));
 			}
 		}, 1500L);
 	}

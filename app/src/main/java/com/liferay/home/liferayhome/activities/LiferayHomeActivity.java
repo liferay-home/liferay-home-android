@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
@@ -19,8 +20,11 @@ import static com.liferay.home.liferayhome.utils.PreferencesUtil.savePreference;
 public abstract class LiferayHomeActivity extends AppCompatActivity {
 
 	public static final String TAG = "LiferayHome";
-	private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+
 	protected GoogleAccountCredential credential;
+	protected View content;
+
+	private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,6 +32,8 @@ public abstract class LiferayHomeActivity extends AppCompatActivity {
 
 		credential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES))
 			.setBackOff(new ExponentialBackOff());
+
+		content = findViewById(android.R.id.content);
 	}
 
 	protected void onStart() {
