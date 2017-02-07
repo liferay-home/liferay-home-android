@@ -39,8 +39,7 @@ public class CalendarInteractor implements Runnable {
 
 			EventBus.getDefault().post(events);
 		} catch (IOException e) {
-			//FIXME !
-			e.printStackTrace();
+			EventBus.getDefault().post(e);
 		}
 	}
 }

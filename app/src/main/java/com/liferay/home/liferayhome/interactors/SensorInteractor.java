@@ -12,24 +12,37 @@ public class SensorInteractor extends Interactor {
 
 	@Override
 	public void run() {
-		OkHttpClient client = new OkHttpClient();
 		try {
+			OkHttpClient client = new OkHttpClient();
+
 			Request request = new Request.Builder().url(BASE_URL + "/sensor-data").get().build();
 			Response response = client.newCall(request).execute();
 			String result = response.body().string();
 
-			JsonElement jsonElement = new JsonParser().parse(result);
-			JsonArray jsonArray =
-				jsonElement.getAsJsonObject().get("_embedded").getAsJsonObject().get("sensorDatas").getAsJsonArray();
+			JsonArray jsonArray = parseToArray(result);
 
-			for (int i = jsonArray.size() - 1; i > 0; i--) {
-				if (jsonArray.get(i).getAsJsonObject().get("type").getAsString().equals("TEMPERATURE")) {
-					EventBus.getDefault().post(jsonArray.get(i).getAsJsonObject().get("value").getAsDouble());
-					break;
-				}
-			}
+			jsonArray = filterBy(jsonArray, "type", "TEMPERATURE");
+			double value =
+				jsonArray.size() > 0 ? jsonArray.get(jsonArray.size() - 1).getAsJsonObject().get("value").getAsDouble()
+					: 0;
+			EventBus.getDefault().post(value);
 		} catch (Exception e) {
-			e.printStackTrace();
+			EventBus.getDefault().post(e);
 		}
+	}
+
+	private JsonArray filterBy(JsonArray jsonArray, String type, String temperature) {
+		JsonArray array = new JsonArray();
+		for (int i = 0; i < jsonArray.size(); i++) {
+			if (temperature.equals(jsonArray.get(i).getAsJsonObject().get(type).getAsString())) {
+				array.add(jsonArray.get(i));
+			}
+		}
+		return array;
+	}
+
+	private JsonArray parseToArray(String result) {
+		JsonElement jsonElement = new JsonParser().parse(result);
+		return jsonElement.getAsJsonObject().get("_embedded").getAsJsonObject().get("sensorDatas").getAsJsonArray();
 	}
 }

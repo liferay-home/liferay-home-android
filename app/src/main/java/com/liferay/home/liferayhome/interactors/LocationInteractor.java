@@ -18,11 +18,10 @@ public class LocationInteractor extends Interactor {
 	}
 
 	public void run() {
-
-		OkHttpClient client = new OkHttpClient();
-
-		Gson gson = new Gson();
 		try {
+			OkHttpClient client = new OkHttpClient();
+			Gson gson = new Gson();
+
 			String content = gson.toJson(new PhoneLocation(lastLocation.getLongitude(), lastLocation.getLatitude()));
 			RequestBody phoneLocation = RequestBody.create(JSON, content);
 
